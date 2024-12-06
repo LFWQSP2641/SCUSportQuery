@@ -12,6 +12,7 @@ class SportQueryDBRead : public QThread
 
 public:
     explicit SportQueryDBRead(QObject *parent = nullptr);
+    ~SportQueryDBRead();
 
 public slots:
     void search(const QString &issue);

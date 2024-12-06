@@ -2,13 +2,21 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFile>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStandardPaths>
 
 SportQueryDBRead::SportQueryDBRead(QObject *parent)
     : QThread{ parent }
 {
+}
+
+SportQueryDBRead::~SportQueryDBRead()
+{
+    exit(1);
+    wait();
 }
 
 void SportQueryDBRead::search(const QString &issue)
@@ -22,7 +30,12 @@ QList<SportQuestion> SportQueryDBRead::searchSync(const QString &issue, bool sig
 {
     qDebug() << "搜索问题：" << issue;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(QCoreApplication::applicationDirPath().append(QStringLiteral("/question.db")));
+#ifdef Q_OS_WINDOWS
+    const QString dbPath = QCoreApplication::applicationDirPath().append(QStringLiteral("/data/question.db"));
+#else
+    const QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation).append(QStringLiteral("/question.db"));
+#endif
+    db.setDatabaseName(dbPath);
 
     if (!db.open())
     {

@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import SCUSportQuery
 
 Window {
+    id: sportQueryWindow
     width: 640
     height: 480
     visible: true
@@ -14,6 +15,7 @@ Window {
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: 5
         spacing: 10
         RowLayout {
             Layout.fillWidth: true
@@ -45,28 +47,36 @@ Window {
                 id: questionItem
                 required property var model
                 width: questionListView.width
-                height: choiceText.height + 10
+                height: Math.max(issueText.height, choiceText.height, answerText.height) + 10
                 Rectangle {
                     width: parent.width
-                    height: questionItem.height
+                    height: parent.height
+
                     // color: "lightgray"
                     // border.color: "black"
                     border.width: 1
                     RowLayout {
                         anchors.fill: parent
+                        spacing: 0
                         Text {
                             id: issueText
                             Layout.alignment: Qt.AlignVCenter
+                            Layout.maximumWidth: questionItem.width - choiceText.width - answerText.width
+                            Layout.fillWidth: true
+                            padding: 5
+                            wrapMode: Text.Wrap
                             text: questionItem.model.issue
                         }
                         Text {
                             id: choiceText
                             Layout.alignment: Qt.AlignVCenter
+                            padding: 5
                             text: questionItem.model.choice
                         }
                         Text {
                             id: answerText
                             Layout.alignment: Qt.AlignVCenter
+                            padding: 5
                             text: questionItem.model.answer
                         }
                     }
