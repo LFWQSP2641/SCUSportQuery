@@ -47,7 +47,7 @@ jobs:
         mkdir -p release_package
         cd release_package
         copy ${{ github.workspace }}/build/Release/appSCUSportQuery.exe .
-        copy ${{ github.workspace }}/build/Release/data ./data
+        copy ${{ github.workspace }}/build/Release/data/ ./data/
         windeployqt --qmldir ${{ github.workspace }}/resources/qml ./appSCUSportQuery.exe
 
     - name: Compress
