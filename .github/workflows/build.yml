@@ -1,0 +1,68 @@
+name: Compile Qt project
+
+on: push
+
+env:
+  BUILD_TYPE: Release
+  QT_VERSION: '6.8.0'
+  VCPKG_ROOT: '${{ github.workspace }}/vcpkg'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Get cmake
+      uses: lukka/get-cmake@latest
+
+    - uses: TheMrMilchmann/setup-msvc-dev@v3
+      with:
+        arch: x64
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        cache: 'true'
+        version: ${{ env.QT_VERSION }}
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        tools: 'tools_ninja tools_cmake tools_vcredist,qt.tools.vcredist_msvc2022_x64'
+
+    - name: Configure CMake
+      run: cmake -B build -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -B ${{github.workspace}}/build
+
+    # 编译解决方案
+    - name: Build
+      run: |
+        cd ${{ github.workspace }}
+        cd build
+        cmake --build . --parallel --config Release
+
+    - name: Package
+      run: |
+        cd ${{ github.workspace }}
+        mkdir -p release_package
+        cd release_package
+        copy ${{ github.workspace }}/build/Release/appSCUSportQuery.exe .
+        copy ${{ github.workspace }}/build/Release/data ./data
+        windeployqt --qmldir ${{ github.workspace }}/resources/qml ./appSCUSportQuery.exe
+
+    - name: Compress
+      run: |
+        cd ${{ github.workspace }}
+        7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on SCUSportQuery.7z release_package
+
+    - name: Upload exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: appSCUSportQuery.exe
+        path: ${{ github.workspace }}/build/Release/appSCUSportQuery.exe
+
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        name: SCUSportQuery.7z
+        path: ${{ github.workspace }}/SCUSportQuery.7z
