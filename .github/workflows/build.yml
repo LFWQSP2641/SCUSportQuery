@@ -48,7 +48,7 @@ jobs:
         cd release_package
         copy ${{ github.workspace }}/build/Release/appSCUSportQuery.exe .
         copy -Path "${{ github.workspace }}/build/data" -Destination "." -Recurse
-        windeployqt --qmldir ${{ github.workspace }}/resources/qml ./appSCUSportQuery.exe
+        windeployqt --qmldir ${{ github.workspace }} ./appSCUSportQuery.exe
 
     - name: Compress
       run: |
