@@ -52,8 +52,7 @@ Window {
                     width: parent.width
                     height: parent.height
 
-                    // color: "lightgray"
-                    // border.color: "black"
+                    border.color: "lightgray"
                     border.width: 1
                     RowLayout {
                         anchors.fill: parent
@@ -67,16 +66,32 @@ Window {
                             wrapMode: Text.Wrap
                             text: questionItem.model.issue
                         }
+                        // 分隔栏
+                        Rectangle {
+                            Layout.fillHeight: true
+                            implicitWidth: questionItem.model.choice.length > 0 ? 2 : 0
+                            color: "lightgray"
+                        }
                         Text {
                             id: choiceText
                             Layout.alignment: Qt.AlignVCenter
-                            padding: 5
+                            Layout.maximumWidth: questionItem.width * 0.5
+                            padding: questionItem.model.choice.length > 0 ? 5 : 0
+                            wrapMode: Text.Wrap
                             text: questionItem.model.choice
+                        }
+                        // 分隔栏
+                        Rectangle {
+                            Layout.fillHeight: true
+                            implicitWidth: 2
+                            color: "lightgray"
                         }
                         Text {
                             id: answerText
                             Layout.alignment: Qt.AlignVCenter
+                            Layout.maximumWidth: questionItem.width * 0.5
                             padding: 5
+                            wrapMode: Text.Wrap
                             text: questionItem.model.answer
                         }
                     }
