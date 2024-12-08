@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(SCUSportQuery VERSION 0.2 LANGUAGES CXX)
+project(SCUSportQuery VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -26,7 +26,7 @@ set(ANDROID_SOURCES
 
 qt_add_qml_module(appSCUSportQuery
     URI SCUSportQuery
-    VERSION 0.2
+    VERSION 0.3
     QML_FILES
         Main.qml
         SOURCES SportQueryDBRead.h SportQueryDBRead.cpp
@@ -60,8 +60,8 @@ install(TARGETS appSCUSportQuery
 )
 
 if(ANDROID)
-    set(ANDROID_VERSION_NAME "0.2")
-    set(ANDROID_VERSION_CODE 2)
+    set(ANDROID_VERSION_NAME "0.3")
+    set(ANDROID_VERSION_CODE 3)
 
     # 添加Android资源文件
     set(QT_ANDROID_PACKAGE_SOURCE_DIR android)
